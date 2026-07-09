@@ -1,8 +1,8 @@
 FROM node:20-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci && npm install -g typescript
+RUN npm ci
 COPY . .
-RUN tsc
+RUN npx tsc
 EXPOSE 3001
 CMD ["node", "dist/index.js"]
