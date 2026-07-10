@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { api } from '@/lib/api'
 import { Plus, Bot, Trash2, Globe, MessageSquare, Database, Wrench, Zap } from 'lucide-react'
@@ -18,7 +18,7 @@ interface Agent {
 const typeIcons: Record<string, any> = { api: Globe, openai_compatible: Zap, prompt_only: MessageSquare, rag: Database, tool_calling: Wrench }
 const typeLabels: Record<string, string> = { api: 'API Endpoint', openai_compatible: 'OpenAI Compatible', prompt_only: 'Prompt Only', rag: 'RAG Agent', tool_calling: 'Tool Calling' }
 
-export default function AgentsPage() {
+function AgentsContent() {
     const searchParams = useSearchParams()
     const projectId = searchParams.get('project_id')
     const [agents, setAgents] = useState<Agent[]>([])
@@ -179,5 +179,13 @@ export default function AgentsPage() {
                 </div>
             )}
         </div>
+    )
+}
+
+export default function AgentsPage() {
+    return (
+        <Suspense fallback={<div className="space-y-4">{[1, 2, 3].map(i => <div key={i} className="h-40 bg-gray-100 rounded-xl animate-pulse" />)}</div>}>
+            <AgentsContent />
+        </Suspense>
     )
 }
