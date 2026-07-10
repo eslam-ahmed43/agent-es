@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { api } from '@/lib/api'
 import { Plus, FlaskConical, Trash2, User, AlertTriangle, Shield, MessageSquare, Sparkles, Loader2 } from 'lucide-react'
 
@@ -16,10 +15,7 @@ interface Scenario {
 }
 
 const typeIcons: Record<string, any> = {
-    persona: User,
-    edge_case: AlertTriangle,
-    attack: Shield,
-    long_conversation: MessageSquare
+    persona: User, edge_case: AlertTriangle, attack: Shield, long_conversation: MessageSquare
 }
 
 const typeColors: Record<string, string> = {
@@ -30,9 +26,7 @@ const typeColors: Record<string, string> = {
 }
 
 export default function ScenariosPage() {
-    const searchParams = useSearchParams()
-    const agentId = searchParams.get('agent_id')
-
+    const [agentId, setAgentId] = useState<string | null>(null)
     const [scenarios, setScenarios] = useState<Scenario[]>([])
     const [agents, setAgents] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
@@ -40,19 +34,16 @@ export default function ScenariosPage() {
     const [showModal, setShowModal] = useState(false)
     const [showGenerateModal, setShowGenerateModal] = useState(false)
     const [creating, setCreating] = useState(false)
+    const [form, setForm] = useState({ name: '', type: 'persona', persona: '', expected_behavior: '', agent_id: '', user_message: '' })
+    const [generateForm, setGenerateForm] = useState({ agent_id: '', count: 10, types: ['persona', 'edge_case', 'attack', 'long_conversation'], provider: 'gemini', model: 'gemini-3.5-flash' })
 
-    const [form, setForm] = useState({
-        name: '', type: 'persona', persona: '',
-        expected_behavior: '', agent_id: agentId || '', user_message: ''
-    })
-
-    const [generateForm, setGenerateForm] = useState({
-        agent_id: agentId || '',
-        count: 10,
-        types: ['persona', 'edge_case', 'attack', 'long_conversation'],
-        provider: 'gemini',
-        model: 'gemini-2.5-flash'
-    })
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search)
+        const id = params.get('agent_id')
+        setAgentId(id)
+        setForm(f => ({ ...f, agent_id: id || '' }))
+        setGenerateForm(f => ({ ...f, agent_id: id || '' }))
+    }, [])
 
     const fetchData = async () => {
         try {
@@ -100,9 +91,7 @@ export default function ScenariosPage() {
     const toggleType = (type: string) => {
         setGenerateForm(prev => ({
             ...prev,
-            types: prev.types.includes(type)
-                ? prev.types.filter(t => t !== type)
-                : [...prev.types, type]
+            types: prev.types.includes(type) ? prev.types.filter(t => t !== type) : [...prev.types, type]
         }))
     }
 
@@ -170,7 +159,6 @@ export default function ScenariosPage() {
                             <Sparkles size={20} className="text-purple-600" />
                             <h2 className="text-lg font-semibold">AI Generate Scenarios</h2>
                         </div>
-
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Agent</label>
                             <select value={generateForm.agent_id} onChange={(e) => setGenerateForm({ ...generateForm, agent_id: e.target.value })}
@@ -179,51 +167,27 @@ export default function ScenariosPage() {
                                 {agents.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                             </select>
                         </div>
-
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Number of Scenarios</label>
                             <input type="number" min={5} max={50} value={generateForm.count}
                                 onChange={(e) => setGenerateForm({ ...generateForm, count: parseInt(e.target.value) })}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500" />
                         </div>
-
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Scenario Types</label>
                             <div className="grid grid-cols-2 gap-2">
                                 {['persona', 'edge_case', 'attack', 'long_conversation'].map(type => (
                                     <button key={type} onClick={() => toggleType(type)}
-                                        className={`px-3 py-2 rounded-lg text-xs font-medium border transition ${generateForm.types.includes(type)
-                                                ? 'bg-purple-600 text-white border-purple-600'
-                                                : 'bg-white text-gray-600 border-gray-300 hover:border-purple-400'
-                                            }`}>
+                                        className={`px-3 py-2 rounded-lg text-xs font-medium border transition ${generateForm.types.includes(type) ? 'bg-purple-600 text-white border-purple-600' : 'bg-white text-gray-600 border-gray-300 hover:border-purple-400'}`}>
                                         {type.replace('_', ' ')}
                                     </button>
                                 ))}
                             </div>
                         </div>
-
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">AI Provider</label>
-                            <select value={generateForm.provider} onChange={(e) => setGenerateForm({ ...generateForm, provider: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                <option value="gemini">Gemini</option>
-                                <option value="groq">Groq</option>
-                                <option value="openrouter">OpenRouter</option>
-                                <option value="nara">Nara</option>
-                            </select>
-                        </div>
-
-                        <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg text-xs text-purple-700">
-                            Each scenario type will be generated by a different AI model for maximum diversity, then filtered by Gemini to remove duplicates.
-                        </div>
-
                         <div className="flex gap-3 justify-end">
                             <button onClick={() => setShowGenerateModal(false)}
-                                className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                                Cancel
-                            </button>
-                            <button onClick={handleGenerate}
-                                disabled={generating || !generateForm.agent_id || generateForm.types.length === 0}
+                                className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition">Cancel</button>
+                            <button onClick={handleGenerate} disabled={generating || !generateForm.agent_id || generateForm.types.length === 0}
                                 className="flex items-center gap-2 px-4 py-2 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition disabled:opacity-50">
                                 {generating ? <><Loader2 size={14} className="animate-spin" /> Generating...</> : <><Sparkles size={14} /> Generate</>}
                             </button>

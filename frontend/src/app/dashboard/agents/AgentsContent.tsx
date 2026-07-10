@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { api } from '@/lib/api'
 import { Plus, Bot, Trash2, Globe, MessageSquare, Database, Wrench, Zap } from 'lucide-react'
 
@@ -19,13 +18,17 @@ const typeIcons: Record<string, any> = { api: Globe, openai_compatible: Zap, pro
 const typeLabels: Record<string, string> = { api: 'API Endpoint', openai_compatible: 'OpenAI Compatible', prompt_only: 'Prompt Only', rag: 'RAG Agent', tool_calling: 'Tool Calling' }
 
 export default function AgentsContent() {
-    const searchParams = useSearchParams()
-    const projectId = searchParams.get('project_id')
+    const [projectId, setProjectId] = useState<string | null>(null)
     const [agents, setAgents] = useState<Agent[]>([])
     const [loading, setLoading] = useState(true)
     const [showModal, setShowModal] = useState(false)
     const [creating, setCreating] = useState(false)
     const [form, setForm] = useState({ name: '', description: '', type: 'prompt_only', system_prompt: '', endpoint_url: '', api_key: '', model: '', domain: '' })
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search)
+        setProjectId(params.get('project_id'))
+    }, [])
 
     const fetchAgents = async () => {
         try {
