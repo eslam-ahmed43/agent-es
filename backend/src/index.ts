@@ -26,6 +26,11 @@ import reportRoute from './routes/report.route'
 import memoryEvalRoute from './routes/memory-eval.route'
 import toolEvalRoute from './routes/tool-eval.route'
 import costAnalyticsRoute from './routes/cost-analytics.route'
+import mcpRoute from './routes/mcp.route'
+import fingerprintRoute from './routes/fingerprint.route'
+import monitorRoute from './routes/monitor.route'
+import certificationRoute from './routes/certification.route'
+import connectorRoute from './routes/connector.route'
 
 
 dotenv.config()
@@ -72,6 +77,12 @@ app.use('/api/reports', reportsRoute)
 app.use('/api/memory-eval', memoryEvalRoute)
 app.use('/api/tool-eval', toolEvalRoute)
 app.use('/api/cost-analytics', costAnalyticsRoute)
+app.use('/api/mcp', mcpRoute)
+app.use('/api/fingerprint', fingerprintRoute)
+app.use('/api/monitor', monitorRoute)
+app.use('/api/certification', certificationRoute)
+app.use('/api/connectors', connectorRoute)
+
 
 
 app.listen(PORT, () => {

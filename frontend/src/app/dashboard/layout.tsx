@@ -4,12 +4,11 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
-import { LayoutDashboard, Bot, FlaskConical, Play, FileText, LogOut, ChevronLeft, ChevronRight, BarChart3, Shield, Trophy, Sparkles, GitBranch, TrendingUp, Target, GitCommit, LayoutPanelTop, Crown, Brain, Wrench, DollarSign, Link2 } from 'lucide-react'
+import { LayoutDashboard, Bot, FlaskConical, Play, FileText, LogOut, ChevronLeft, ChevronRight, BarChart3, Shield, Trophy, Sparkles, GitBranch, TrendingUp, Target, GitCommit, LayoutPanelTop, Crown, Brain, Wrench, DollarSign, Link2, Cpu, Activity, Award, Cable } from 'lucide-react'
 
 
 const navItems = [
     { href: '/dashboard/overview', label: 'Overview', icon: LayoutPanelTop },
-    { href: '/dashboard/mcp', label: 'MCP Connect', icon: Link2 },
     { href: '/dashboard/projects', label: 'Projects', icon: LayoutDashboard },
     { href: '/dashboard/agents', label: 'Agents', icon: Bot },
     { href: '/dashboard/scenarios', label: 'Scenarios', icon: FlaskConical },
@@ -26,7 +25,12 @@ const navItems = [
     { href: '/dashboard/tool-eval', label: 'Tool Eval', icon: Wrench },
     { href: '/dashboard/cost-analytics', label: 'Cost Analytics', icon: DollarSign },
     { href: '/dashboard/reports', label: 'Reports', icon: FileText },
-    { href: '/dashboard/judge-validation', label: 'Judge Validation', icon: Shield }
+    { href: '/dashboard/judge-validation', label: 'Judge Validation', icon: Shield },
+    { href: '/dashboard/mcp', label: 'MCP Connect', icon: Link2 },
+    { href: '/dashboard/fingerprint', label: 'Intelligence', icon: Cpu },
+    { href: '/dashboard/monitor', label: 'Live Monitor', icon: Activity },
+    { href: '/dashboard/certification', label: 'Certification', icon: Award },
+    { href: '/dashboard/connectors', label: 'Connectors', icon: Cable },
 ]
 
 
