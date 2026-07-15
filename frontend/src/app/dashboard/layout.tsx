@@ -6,8 +6,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import {
     Bot, Play, FileText, LogOut, ChevronLeft, ChevronRight,
-    BarChart3, Sparkles, TrendingUp, Home, Settings,
-    ChevronDown, ChevronUp
+    Sparkles, TrendingUp, Home, FlaskConical, GitBranch,
+    Brain, Wrench, GitCommit, BarChart3, ChevronDown, ChevronUp
 } from 'lucide-react'
 
 const navItems = [
@@ -24,7 +24,6 @@ const navItems = [
         sub: [
             { href: '/dashboard/projects', label: 'Projects' },
             { href: '/dashboard/scenarios', label: 'Scenarios' },
-            { href: '/dashboard/mcp', label: 'MCP Connect' },
         ]
     },
     {
@@ -45,7 +44,6 @@ const navItems = [
         icon: TrendingUp,
         sub: [
             { href: '/dashboard/analytics', label: 'Analytics' },
-            { href: '/dashboard/leaderboard', label: 'Leaderboard' },
             { href: '/dashboard/reports', label: 'Reports' },
             { href: '/dashboard/versions', label: 'Versions' },
         ]
@@ -58,22 +56,6 @@ const navItems = [
             { href: '/dashboard/improve', label: 'Auto Improve' },
             { href: '/dashboard/targeted-improve', label: 'Targeted' },
         ]
-    },
-    {
-        href: '/dashboard/fingerprint',
-        label: 'Intelligence',
-        icon: BarChart3,
-        sub: [
-            { href: '/dashboard/fingerprint', label: 'Agent Analysis' },
-            { href: '/dashboard/monitor', label: 'Live Monitor' },
-            { href: '/dashboard/certification', label: 'Certification' },
-        ]
-    },
-    {
-        href: '/dashboard/reports',
-        label: 'Reports',
-        icon: FileText,
-        sub: []
     },
 ]
 
@@ -110,13 +92,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         )
     }
 
-    const isActiveGroup = (item: typeof navItems[0]) => {
-        return pathname === item.href || item.sub.some(s => s.href === pathname)
-    }
+    const isActiveGroup = (item: typeof navItems[0]) =>
+        pathname === item.href || item.sub.some(s => s.href === pathname)
 
     return (
         <div className="min-h-screen bg-gray-50 flex">
-            <aside className={`${collapsed ? 'w-16' : 'w-56'} transition-all duration-200 bg-white border-r border-gray-100 flex flex-col shrink-0 fixed h-full z-10`}>
+            <aside className={`${collapsed ? 'w-16' : 'w-52'} transition-all duration-200 bg-white border-r border-gray-100 flex flex-col shrink-0 fixed h-full z-10`}>
 
                 <div className="p-4 flex items-center justify-between border-b border-gray-100">
                     {!collapsed && (
@@ -202,7 +183,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
             </aside>
 
-            <main className={`flex-1 overflow-auto transition-all duration-200 ${collapsed ? 'ml-16' : 'ml-56'}`}>
+            <main className={`flex-1 overflow-auto transition-all duration-200 ${collapsed ? 'ml-16' : 'ml-52'}`}>
                 <div className="max-w-5xl mx-auto p-8">
                     {children}
                 </div>
