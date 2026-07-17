@@ -37,7 +37,7 @@ export default function LandingPage() {
           </button>
           <button onClick={() => router.push('/register')}
             className="text-sm bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition">
-            Get Started Free
+            Get Started
           </button>
         </div>
       </nav>
@@ -58,7 +58,7 @@ export default function LandingPage() {
         <div className="flex items-center justify-center gap-4">
           <button onClick={() => router.push('/register')}
             className="flex items-center gap-2 bg-black text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-800 transition text-sm">
-            Start Testing Free <ArrowRight size={16} />
+            Start Testing <ArrowRight size={16} />
           </button>
           <button onClick={() => router.push('/login')}
             className="flex items-center gap-2 border border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-medium hover:bg-gray-50 transition text-sm">
@@ -71,8 +71,8 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto px-6 grid grid-cols-3 gap-8 text-center">
           {[
             { value: '4', label: 'Benchmark Categories' },
-            { value: 'AI+Human', label: 'Scenario Generation' },
-            { value: 'Free', label: 'During Beta' },
+            { value: 'AI + Human', label: 'Scenario Generation' },
+            { value: 'End-to-End', label: 'Agent Evaluation' },
           ].map((s, i) => (
             <div key={i}>
               <p className="text-3xl font-bold">{s.value}</p>
@@ -143,7 +143,7 @@ export default function LandingPage() {
       <section className="max-w-5xl mx-auto px-6 py-20">
         <p className="text-center text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Benchmarks</p>
         <h2 className="text-3xl font-bold text-center mb-4">Real results on real models</h2>
-        <p className="text-center text-gray-500 text-sm mb-10">Customer Support Benchmark — tested by AgentOS team</p>
+        <p className="text-center text-gray-500 text-sm mb-10">Customer Support Benchmark — tested by AgentOS</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { model: 'Llama 4 Scout', provider: 'Groq', score: 95.5, color: 'bg-green-500' },
@@ -177,14 +177,13 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold mb-4">Ready to ship reliable AI?</h2>
           <p className="text-gray-400 text-sm mb-8">
             Test your AI Agent before it fails in production.
-            Free during Beta.
           </p>
           <button onClick={() => router.push('/register')}
             className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded-xl font-medium hover:bg-gray-100 transition mx-auto">
-            Get Started Free <ArrowRight size={16} />
+            Get Started <ArrowRight size={16} />
           </button>
           <div className="flex items-center justify-center gap-6 mt-8 text-xs text-gray-500">
-            {['Free during Beta', 'No setup required', '4 benchmark categories'].map((t, i) => (
+            {['No setup required', '4 benchmark categories', 'Auto Improve'].map((t, i) => (
               <div key={i} className="flex items-center gap-1.5">
                 <CheckCircle size={12} className="text-green-400" />
                 {t}
