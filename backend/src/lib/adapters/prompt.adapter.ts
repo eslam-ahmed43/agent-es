@@ -7,7 +7,8 @@ export class PromptAdapter implements AgentAdapter {
     constructor(
         private system_prompt: string,
         private model: string = 'meta-llama/llama-4-scout-17b-16e-instruct',
-        private provider: string = 'groq'
+        private provider: string = 'groq',
+        private temperature: number = 0.7
     ) { }
 
     async health(): Promise<AgentHealthCheck> {
@@ -30,8 +31,10 @@ export class PromptAdapter implements AgentAdapter {
 
         const res = await callExecution({
             messages,
-            temperature: request.temperature ?? 0.7,
-            max_tokens: request.max_tokens || 1500
+            temperature: request.temperature ?? this.temperature ?? 0.7,
+            max_tokens: request.max_tokens || 1500,
+            provider: this.provider as any,
+            model: this.model
         })
 
         return {

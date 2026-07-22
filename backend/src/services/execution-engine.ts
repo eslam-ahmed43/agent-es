@@ -36,19 +36,28 @@ export const executeScenario = async (contract: ExecutionContract): Promise<Exec
         }
     }
 
+    const provider = agent.provider || 'groq'
+    const model = agent.model || 'meta-llama/llama-4-scout-17b-16e-instruct'
+    const temperature = agent.temperature || 0.7
+    const max_tokens = agent.max_tokens || 1500
+
     const adapter = createAdapter({
         type: agent.type,
         endpoint_url: agent.endpoint_url || undefined,
         api_key: agent.api_key_encrypted || undefined,
-        model: agent.model || 'meta-llama/llama-4-scout-17b-16e-instruct',
+        model,
         system_prompt: agent.system_prompt || 'You are a helpful assistant.',
-        provider: 'groq'
+        provider: provider as any,
+        temperature,
+        max_tokens
     })
 
     try {
         const response = await adapter.execute({
             ...contract.request,
-            system_prompt: agent.system_prompt || 'You are a helpful assistant.'
+            system_prompt: agent.system_prompt || 'You are a helpful assistant.',
+            temperature,
+            max_tokens
         })
         return {
             run_id: contract.run_id,
@@ -76,6 +85,12 @@ export const executeRun = async (
     agent_id: string,
     scenario_ids: string[]
 ): Promise<void> => {
+    const { data: agent } = await supabaseAdmin
+        .from('agents').select('*').eq('id', agent_id).single()
+
+    const provider = agent?.provider || 'groq'
+    const model = agent?.model || 'meta-llama/llama-4-scout-17b-16e-instruct'
+
     await supabaseAdmin.from('runs').update({
         status: 'running',
         started_at: new Date().toISOString(),
@@ -107,8 +122,8 @@ export const executeRun = async (
                 messages: (scenario.messages || []).filter((m: any) =>
                     m.role === 'user' || m.role === 'assistant'
                 ),
-                temperature: 0.7,
-                max_tokens: 1500
+                temperature: agent?.temperature || 0.7,
+                max_tokens: agent?.max_tokens || 1500
             },
             timeout: 30000,
             retry: 2
@@ -155,7 +170,9 @@ export const executeRun = async (
                 suggestions: judgeScore?.suggestions || [],
                 explanation: judgeScore?.explanation || null,
                 helpfulness: judgeScore?.helpfulness || 0,
-                consistency: judgeScore?.consistency || 0
+                consistency: judgeScore?.consistency || 0,
+                provider,
+                model
             }
         }).select().single()
 
@@ -163,9 +180,9 @@ export const executeRun = async (
             await supabaseAdmin.from('execution_traces').insert({
                 evaluation_id: evaluation.id,
                 run_id, scenario_id,
-                adapter_type: 'prompt_only',
-                provider: 'groq',
-                model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+                adapter_type: agent?.type || 'prompt_only',
+                provider,
+                model,
                 input_messages: scenario.messages,
                 output_messages: result.response?.content
                     ? [{ role: 'assistant', content: result.response.content }]
@@ -199,13 +216,16 @@ export const healthCheckAgent = async (agent_id: string) => {
 
     if (!agent) throw new Error('Agent not found')
 
+    const provider = agent.provider || 'groq'
+    const model = agent.model || 'meta-llama/llama-4-scout-17b-16e-instruct'
+
     const adapter = createAdapter({
         type: agent.type,
         endpoint_url: agent.endpoint_url || undefined,
         api_key: agent.api_key_encrypted || undefined,
-        model: agent.model || 'meta-llama/llama-4-scout-17b-16e-instruct',
+        model,
         system_prompt: agent.system_prompt || 'You are a helpful assistant.',
-        provider: 'groq'
+        provider: provider as any
     })
 
     return adapter.health()

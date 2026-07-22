@@ -11,6 +11,8 @@ export interface AgentConfig {
     model?: string
     system_prompt?: string
     provider?: AIProvider
+    temperature?: number
+    max_tokens?: number
 }
 
 export const createAdapter = (config: AgentConfig): AgentAdapter => {
@@ -29,8 +31,9 @@ export const createAdapter = (config: AgentConfig): AgentAdapter => {
         default:
             return new PromptAdapter(
                 config.system_prompt || 'You are a helpful assistant.',
-                config.model || 'gemini-2.5-flash',
-                config.provider || 'gemini'
+                config.model || 'meta-llama/llama-4-scout-17b-16e-instruct',
+                config.provider || 'groq',
+                config.temperature || 0.7
             )
     }
 }
