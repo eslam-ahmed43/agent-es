@@ -102,7 +102,7 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = 1): P
         try {
             const res = await fetchWithTimeout(url, options)
             if (res.status === 429 && i < retries) {
-                await new Promise(r => setTimeout(r, 2000))
+                await new Promise(r => setTimeout(r, 3000))
                 continue
             }
             return res
@@ -274,7 +274,7 @@ export const callWithFallback = async (
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
 
 export const callJudge = async (options: AIRequestOptions): Promise<AIResponse> => {
-    await sleep(500)
+    await sleep(1000)
     return callWithFallback(options, JUDGE_CHAIN, JUDGE_MODELS)
 }
 
