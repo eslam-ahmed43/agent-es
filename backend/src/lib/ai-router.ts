@@ -54,7 +54,7 @@ const PROVIDER_CONFIG = {
     openrouter: {
         baseUrl: 'https://openrouter.ai/api/v1',
         getKey: () => process.env.OPENROUTER_API_KEY,
-        defaultModel: 'anthropic/claude-sonnet-4.6',
+        defaultModel: 'nvidia/nemotron-3-super-120b-a12b:free',
         extraHeaders: {
             'HTTP-Referer': 'https://agentes.vercel.app',
             'X-Title': 'AgentOS'
@@ -67,28 +67,25 @@ const PROVIDER_CONFIG = {
     }
 }
 
-// Judge: Groq أول (سريع ومجاني) → Gemini → OpenRouter كـ backup
 const JUDGE_CHAIN: AIProvider[] = ['groq', 'gemini', 'openrouter']
 const JUDGE_MODELS: Partial<Record<AIProvider, string>> = {
     groq: 'meta-llama/llama-4-scout-17b-16e-instruct',
     gemini: 'gemini-3.5-flash',
-    openrouter: 'anthropic/claude-sonnet-4.6'
+    openrouter: 'nvidia/nemotron-3-super-120b-a12b:free'
 }
 
-// Execution: Groq أسرع → NVIDIA → Gemini
-const EXECUTION_CHAIN: AIProvider[] = ['groq', 'nvidia', 'gemini']
+const EXECUTION_CHAIN: AIProvider[] = ['groq', 'gemini', 'openrouter']
 const EXECUTION_MODELS: Partial<Record<AIProvider, string>> = {
     groq: 'meta-llama/llama-4-scout-17b-16e-instruct',
-    nvidia: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning',
-    gemini: 'gemini-3.5-flash'
+    gemini: 'gemini-3.5-flash',
+    openrouter: 'nvidia/nemotron-3-super-120b-a12b:free'
 }
 
-// Generation: Gemini أحسن للتوليد → NVIDIA → Groq
-const GENERATION_CHAIN: AIProvider[] = ['gemini', 'nvidia', 'groq']
+const GENERATION_CHAIN: AIProvider[] = ['gemini', 'groq', 'openrouter']
 const GENERATION_MODELS: Partial<Record<AIProvider, string>> = {
     gemini: 'gemini-3.5-flash',
-    nvidia: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning',
-    groq: 'meta-llama/llama-4-scout-17b-16e-instruct'
+    groq: 'meta-llama/llama-4-scout-17b-16e-instruct',
+    openrouter: 'nvidia/nemotron-3-super-120b-a12b:free'
 }
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false })
@@ -193,18 +190,8 @@ const callNvidia = async (options: AIRequestOptions): Promise<AIResponse> => {
 
     const res = await fetchWithRetry(`${config.baseUrl}/chat/completions`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-            model,
-            messages,
-            temperature: 0.6,
-            top_p: 0.95,
-            max_tokens: options.max_tokens || 4096,
-            stream: false
-        })
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+        body: JSON.stringify({ model, messages, temperature: 0.6, top_p: 0.95, max_tokens: options.max_tokens || 1500, stream: false })
     })
 
     if (!res.ok) {
@@ -240,12 +227,7 @@ const callOpenAICompatible = async (
             'Authorization': `Bearer ${apiKey}`,
             ...('extraHeaders' in config ? (config as any).extraHeaders : {})
         },
-        body: JSON.stringify({
-            model,
-            messages,
-            temperature: options.temperature ?? 0.7,
-            max_tokens: options.max_tokens || 1500
-        })
+        body: JSON.stringify({ model, messages, temperature: options.temperature ?? 0.7, max_tokens: options.max_tokens || 1500 })
     })
 
     if (!res.ok) {
@@ -289,8 +271,12 @@ export const callWithFallback = async (
     throw new Error(`All providers failed:\n${errors.join('\n')}`)
 }
 
-export const callJudge = (options: AIRequestOptions): Promise<AIResponse> =>
-    callWithFallback(options, JUDGE_CHAIN, JUDGE_MODELS)
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
+
+export const callJudge = async (options: AIRequestOptions): Promise<AIResponse> => {
+    await sleep(500)
+    return callWithFallback(options, JUDGE_CHAIN, JUDGE_MODELS)
+}
 
 export const callExecution = (options: AIRequestOptions): Promise<AIResponse> =>
     callWithFallback(options, EXECUTION_CHAIN, EXECUTION_MODELS)
