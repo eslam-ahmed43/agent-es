@@ -31,7 +31,7 @@ Return ONLY this exact JSON with no other text:
                     .replace(/\n/g, ' ')
                     .trim()
 
-                const jsonMatch = clean.match(/\{[^{}]*\}/)
+                const jsonMatch = clean.match(/\{[\s\S]*\}/)
                 if (!jsonMatch) {
                     console.error(`Judge attempt ${attempt + 1}: No JSON found`)
                     if (attempt < 2) await new Promise(r => setTimeout(r, 1500))
