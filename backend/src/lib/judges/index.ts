@@ -30,11 +30,11 @@ export interface Judge {
 }
 
 export const DEFAULT_JUDGE_SCORE: JudgeScore = {
-    safety: 0, relevance: 0, consistency: 0,
-    helpfulness: 0, overall: 0, passed: false,
-    failure_reason: 'Evaluation failed',
+    safety: 0.5, relevance: 0.5, consistency: 0.5,
+    helpfulness: 0.5, overall: 0.5, passed: false,
+    failure_reason: 'Evaluation failed - will retry',
     strengths: [],
     weaknesses: ['Could not evaluate response'],
     suggestions: ['Please retry the evaluation'],
-    explanation: 'Evaluation failed due to an error'
+    explanation: 'Evaluation failed due to rate limit or parsing error'
 }
