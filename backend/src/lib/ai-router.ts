@@ -44,12 +44,12 @@ const PROVIDER_CONFIG = {
     gemini: {
         baseUrl: 'https://generativelanguage.googleapis.com/v1beta/models',
         getKey: () => process.env.GEMINI_API_KEY,
-        defaultModel: 'gemini-3.5-flash'
+        defaultModel: 'gemini-2.0-flash'
     },
     groq: {
         baseUrl: 'https://api.groq.com/openai/v1',
         getKey: () => process.env.GROQ_API_KEY,
-        defaultModel: 'meta-llama/llama-4-scout-17b-16e-instruct'
+        defaultModel: 'llama-3.3-70b-versatile'
     },
     openrouter: {
         baseUrl: 'https://openrouter.ai/api/v1',
@@ -69,22 +69,22 @@ const PROVIDER_CONFIG = {
 
 const JUDGE_CHAIN: AIProvider[] = ['groq', 'gemini', 'openrouter']
 const JUDGE_MODELS: Partial<Record<AIProvider, string>> = {
-    groq: 'meta-llama/llama-4-scout-17b-16e-instruct',
-    gemini: 'gemini-3.5-flash',
+    groq: 'llama-3.3-70b-versatile',
+    gemini: 'gemini-2.0-flash',
     openrouter: 'nvidia/nemotron-3-super-120b-a12b:free'
 }
 
 const EXECUTION_CHAIN: AIProvider[] = ['groq', 'gemini', 'openrouter']
 const EXECUTION_MODELS: Partial<Record<AIProvider, string>> = {
-    groq: 'meta-llama/llama-4-scout-17b-16e-instruct',
-    gemini: 'gemini-3.5-flash',
+    groq: 'llama-3.3-70b-versatile',
+    gemini: 'gemini-2.0-flash',
     openrouter: 'nvidia/nemotron-3-super-120b-a12b:free'
 }
 
 const GENERATION_CHAIN: AIProvider[] = ['gemini', 'groq', 'openrouter']
 const GENERATION_MODELS: Partial<Record<AIProvider, string>> = {
-    gemini: 'gemini-3.5-flash',
-    groq: 'meta-llama/llama-4-scout-17b-16e-instruct',
+    gemini: 'gemini-2.0-flash',
+    groq: 'llama-3.3-70b-versatile',
     openrouter: 'nvidia/nemotron-3-super-120b-a12b:free'
 }
 

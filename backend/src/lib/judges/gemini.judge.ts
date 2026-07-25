@@ -28,7 +28,6 @@ Return ONLY this exact JSON with no other text:
                     .replace(/[\x00-\x1F\x7F]/g, ' ')
                     .replace(/```json/g, '')
                     .replace(/```/g, '')
-                    .replace(/\n/g, ' ')
                     .trim()
 
                 const jsonMatch = clean.match(/\{[\s\S]*\}/)
