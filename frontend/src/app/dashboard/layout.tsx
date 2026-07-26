@@ -36,6 +36,7 @@ const navItems = [
             { href: '/dashboard/memory-eval', label: 'Memory' },
             { href: '/dashboard/tool-eval', label: 'Tool Calling' },
             { href: '/dashboard/regression', label: 'Regression' },
+            { href: '/dashboard/evaluate', label: 'Full Evaluation' },
         ]
     },
     {
@@ -126,8 +127,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     <button
                                         onClick={() => toggleSection(item.label)}
                                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all mb-0.5 ${isGroupActive
-                                                ? 'text-black bg-gray-100'
-                                                : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+                                            ? 'text-black bg-gray-100'
+                                            : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
                                             }`}>
                                         <Icon size={16} className="shrink-0" />
                                         {!collapsed && (
@@ -140,8 +141,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 ) : (
                                     <Link href={item.href}
                                         className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all mb-0.5 ${isActive
-                                                ? 'bg-black text-white'
-                                                : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+                                            ? 'bg-black text-white'
+                                            : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
                                             }`}>
                                         <Icon size={16} className="shrink-0" />
                                         {!collapsed && <span>{item.label}</span>}
@@ -155,8 +156,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                             return (
                                                 <Link key={sub.href} href={sub.href}
                                                     className={`flex items-center px-2 py-1.5 rounded-lg text-xs font-medium transition-all ${isSubActive
-                                                            ? 'bg-black text-white'
-                                                            : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+                                                        ? 'bg-black text-white'
+                                                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
                                                         }`}>
                                                     {sub.label}
                                                 </Link>

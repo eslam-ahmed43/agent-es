@@ -31,6 +31,8 @@ import fingerprintRoute from './routes/fingerprint.route'
 import monitorRoute from './routes/monitor.route'
 import certificationRoute from './routes/certification.route'
 import connectorRoute from './routes/connector.route'
+import fullEvaluationRoute from './routes/full-evaluation.route'
+
 
 
 dotenv.config()
@@ -82,7 +84,7 @@ app.use('/api/fingerprint', fingerprintRoute)
 app.use('/api/monitor', monitorRoute)
 app.use('/api/certification', certificationRoute)
 app.use('/api/connectors', connectorRoute)
-
+app.use('/api/evaluate', fullEvaluationRoute)
 
 
 app.listen(PORT, () => {
