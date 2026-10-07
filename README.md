@@ -2,6 +2,8 @@
 
 > Test, evaluate, and improve your AI Agent before it fails in production.
 
+![CI](https://github.com/eslam-ahmed43/agent-es/actions/workflows/ci.yml/badge.svg)
+
 **Live Demo:** https://agent-es-nu.vercel.app
 
 ---
